@@ -1,0 +1,39 @@
+services:
+  app:
+    container_name: liberfly-app
+    build:
+      context: .
+      target: development
+      args:
+        # UID and GID must be set as environment variables on the host machine
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:8080"
+      - ${VITE_PORT:-5173}:${VITE_PORT:-5173}
+    networks:
+      - main
+    depends_on:
+      - mysql
+  mysql:
+    container_name: liberfly-mysql
+    image: mysql:9
+    ports:
+      - "3308:3306"
+    networks:
+      - main
+    volumes:
+      - 'mysql:/var/lib/mysql'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: liberfly-mysql
+      MYSQL_USER: liberfly-mysql
+      MYSQL_PASSWORD: liberfly-mysql
+networks:
+  main:
+    driver: bridge
+volumes:
+    mysql:
+        driver: local
