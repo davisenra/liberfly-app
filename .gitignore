@@ -19,3 +19,6 @@ yarn-error.log
 /.idea
 /.vscode
 /storage/certs/*.pem
+/public/vendor
+.scribe
+/resources/views/scribe/index.blade.php
