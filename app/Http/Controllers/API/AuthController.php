@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\Controller;
+use Knuckles\Scribe\Attributes\Authenticated;
+use Knuckles\Scribe\Attributes\Group;
 
+#[Group('Auth', 'Endpoints for authentication')]
 class AuthController extends Controller
 {
     public function login(LoginRequest $request): JsonResponse
@@ -19,10 +22,11 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 60,
         ]);
     }
 
+    #[Authenticated]
     public function me(): JsonResponse
     {
         $authenticatedUser = auth()->user();
@@ -30,6 +34,7 @@ class AuthController extends Controller
         return response()->json($authenticatedUser);
     }
 
+    #[Authenticated]
     public function logout(): JsonResponse
     {
         auth()->logout();
